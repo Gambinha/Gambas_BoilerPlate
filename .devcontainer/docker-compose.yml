@@ -1,0 +1,49 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace:cached
+      - node_modules_server:/workspace/server/node_modules
+      - node_modules_web:/workspace/web/node_modules
+    command: sleep infinity
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/db
+      NODE_ENV: development
+      PORT: 3000
+    ports:
+      - "3000:3000"
+      - "5173:5173"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - network_boilerplate
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - network_boilerplate
+
+volumes:
+  postgres-data:
+  node_modules_server:
+  node_modules_web:
+
+networks:
+  network_boilerplate:

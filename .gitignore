@@ -1,0 +1,18 @@
+# Dependências
+node_modules/
+
+# Server (NestJS)
+server/dist/
+server/.env
+
+# Mobile (React Native/Expo)
+mobile/.expo/
+mobile/dist/
+mobile/node_modules/
+
+# IDE e Containers
+.vscode/
+*.code-workspace
+
+# Agent Skills installer metadata
+.agents/
